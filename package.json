@@ -1,0 +1,12 @@
+{
+  "name": "random-image-api",
+  "version": "1.0.0",
+  "description": "A script to generate images.json dynamically for random image API.",
+  "main": "scripts/generate-json.js",
+  "scripts": {
+    "generate": "node scripts/generate-json.js"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {}
+}
