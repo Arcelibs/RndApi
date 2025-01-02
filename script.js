@@ -5,7 +5,7 @@
 
   // 檢查參數是否合法
   if (!deviceType || !['mobile', 'desktop'].includes(deviceType)) {
-    document.getElementById('errorMessage').textContent = 'Invalid or missing deviceType parameter.';
+    document.body.innerHTML = 'Invalid or missing deviceType parameter.';
     return;
   }
 
@@ -17,17 +17,15 @@
     // 過濾對應類型的圖片
     const images = data[deviceType];
     if (!images || images.length === 0) {
-      document.getElementById('errorMessage').textContent = 'No images available for the specified deviceType.';
+      document.body.innerHTML = 'No images available for the specified deviceType.';
       return;
     }
 
-    // 隨機選擇一張圖片
+    // 隨機選擇一張圖片並重定向
     const randomImage = images[Math.floor(Math.random() * images.length)];
-    const imgElement = document.getElementById('randomImage');
-    imgElement.src = randomImage;
-    imgElement.style.display = 'block';
+    window.location.href = randomImage;
   } catch (error) {
     console.error('Error fetching images:', error);
-    document.getElementById('errorMessage').textContent = 'Error fetching images.';
+    document.body.innerHTML = 'Error fetching images.';
   }
 })();
