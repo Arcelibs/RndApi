@@ -1,7 +1,7 @@
 
 # 隨機圖片 API 靜態網站
 
-本專案是一個基於 **GitHub Pages + Cloudflare Pages** 部署的靜態網站，提供隨機圖片 API 功能。
+本專案是一個基於 **GitHub倉庫 + Cloudflare Pages** 部署的靜態網站，提供隨機圖片 API 功能。
 
 圖片依據 `mobile` 和 `desktop` 分類存放，並動態生成 `images.json` 文件以供前端隨機返回圖片。
 
@@ -114,4 +114,4 @@ node scripts/generate-json.js
 
 ## 授權
 
-本專案採用 [MIT License](LICENSE)。
+本專案採用 GPLv3
