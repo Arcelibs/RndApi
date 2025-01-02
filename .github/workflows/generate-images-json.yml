@@ -1,0 +1,39 @@
+name: Generate images.json
+
+on:
+  push:
+    paths:
+      - 'images/**'  # 監聽 images/ 目錄的變化
+  workflow_dispatch: # 支援手動觸發
+
+jobs:
+  generate-json:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 檢出程式碼
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 設定 Node.js 環境
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # 安裝依賴（如果需要）
+    - name: Install dependencies
+      run: npm install
+
+    # 執行生成腳本
+    - name: Generate images.json
+      run: node scripts/generate-json.js
+
+    # 提交更新的 images.json
+    - name: Commit and push changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add images.json
+        git commit -m "Auto-generate images.json"
+        git push
