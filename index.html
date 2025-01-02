@@ -33,35 +33,41 @@
 </head>
 <body>
   <h1>Random Image API</h1>
-  <p>Use the following links or copy the API URL:</p>
+  <p>Click the buttons below to get a random image:</p>
   <ul>
     <li>
-      <a href="?deviceType=mobile">Random Mobile Image</a>
-      <button onclick="copyToClipboard('?deviceType=mobile')">Copy API URL</button>
+      <button onclick="redirectToRandomImage('mobile')">Random Mobile Image</button>
     </li>
     <li>
-      <a href="?deviceType=desktop">Random Desktop Image</a>
-      <button onclick="copyToClipboard('?deviceType=desktop')">Copy API URL</button>
+      <button onclick="redirectToRandomImage('desktop')">Random Desktop Image</button>
     </li>
   </ul>
   <p>If no <code>deviceType</code> is specified, this page will appear.</p>
 
   <script>
-    function copyToClipboard(endpoint) {
-      const baseUrl = window.location.origin;
-      const fullUrl = `${baseUrl}/${endpoint}`;
-      navigator.clipboard.writeText(fullUrl)
-        .then(() => {
-          alert(`Copied to clipboard: ${fullUrl}`);
-        })
-        .catch(err => {
-          alert('Failed to copy URL to clipboard');
-          console.error(err);
-        });
+    async function redirectToRandomImage(deviceType) {
+      console.log(`Redirecting for deviceType: ${deviceType}`);
+
+      try {
+        const response = await fetch('/images.json');
+        if (!response.ok) throw new Error('Failed to fetch images.json');
+
+        const data = await response.json();
+        const images = data[deviceType];
+        if (images && images.length > 0) {
+          const randomImage = `/${images[Math.floor(Math.random() * images.length)]}`;
+          console.log('Redirecting to:', randomImage);
+
+          // 直接跳轉到隨機圖片
+          window.location.href = randomImage;
+        } else {
+          alert('No images available for the selected device type.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to fetch image data. Please try again later.');
+      }
     }
   </script>
-
-  <!-- 引入 script.js -->
-  <script src="script.js" defer></script>
 </body>
 </html>
