@@ -4,13 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random Image API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 15px 0;
+    }
+    button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
   <h1>Random Image API</h1>
-  <p>Use <code>?deviceType=mobile</code> or <code>?deviceType=desktop</code> to get a random image.</p>
-  <img id="randomImage" src="" alt="Random Image" style="max-width: 100%; height: auto; display: none;">
-  <p id="errorMessage" style="color: red;"></p>
+  <p>Use the following links or copy the API URL:</p>
+  <ul>
+    <li>
+      <a href="?deviceType=mobile">Random Mobile Image</a>
+      <button onclick="copyToClipboard('?deviceType=mobile')">Copy API URL</button>
+    </li>
+    <li>
+      <a href="?deviceType=desktop">Random Desktop Image</a>
+      <button onclick="copyToClipboard('?deviceType=desktop')">Copy API URL</button>
+    </li>
+  </ul>
+  <p>If no <code>deviceType</code> is specified, this page will appear.</p>
 
-  <script src="script.js"></script>
+  <script>
+    function copyToClipboard(endpoint) {
+      const baseUrl = window.location.origin;
+      const fullUrl = `${baseUrl}/${endpoint}`;
+      navigator.clipboard.writeText(fullUrl)
+        .then(() => {
+          alert(`Copied to clipboard: ${fullUrl}`);
+        })
+        .catch(err => {
+          alert('Failed to copy URL to clipboard');
+          console.error(err);
+        });
+    }
+  </script>
 </body>
 </html>
