@@ -1,0 +1,10 @@
+{
+  "mobile": [
+    "images/mobile/image1.jpg",
+    "images/mobile/image2.jpg"
+  ],
+  "desktop": [
+    "images/desktop/image1.jpg",
+    "images/desktop/image2.jpg"
+  ]
+}
