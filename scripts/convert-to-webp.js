@@ -44,6 +44,12 @@ function processDirectory(dir, baseDir) {
     const fullPath = path.join(dir, file);
     const relativePath = path.relative(baseDir, fullPath);
 
+    // 忽略 .md 文件
+    if (path.extname(file).toLowerCase() === '.md') {
+      console.log(`Skipping .md file: ${file}`);
+      return;
+    }
+
     if (fs.statSync(fullPath).isDirectory()) {
       processDirectory(fullPath, baseDir);
     } else if (supportedExtensions.includes(path.extname(file).toLowerCase())) {
