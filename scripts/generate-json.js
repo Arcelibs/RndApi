@@ -1,22 +1,32 @@
 const fs = require('fs');
 const path = require('path');
 
-const baseDir = path.join(__dirname, '../images');
-const outputFile = path.join(__dirname, '../images.json');
+// 支持的图片扩展名
+const supportedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
 
-// 初始化結果物件
-const result = { mobile: [], desktop: [] };
+function scanDirectory(directory) {
+  const files = [];
+  fs.readdirSync(directory).forEach(file => {
+    const fullPath = path.join(directory, file);
+    const ext = path.extname(file).toLowerCase();
 
-// 遍歷目錄
-for (const deviceType of Object.keys(result)) {
-  const dirPath = path.join(baseDir, deviceType);
-  if (fs.existsSync(dirPath)) {
-    result[deviceType] = fs.readdirSync(dirPath)
-      .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-      .map(file => `images/${deviceType}/${file}`);
-  }
+    if (fs.statSync(fullPath).isDirectory()) {
+      files.push(...scanDirectory(fullPath));
+    } else if (supportedExtensions.includes(ext)) {
+      files.push(fullPath);
+    }
+  });
+  return files;
 }
 
-// 寫入 JSON 檔案
-fs.writeFileSync(outputFile, JSON.stringify(result, null, 2));
-console.log('Images JSON generated:', outputFile);
+// 示例目录处理
+const mobileImages = scanDirectory('./images/mobile');
+const desktopImages = scanDirectory('./images/desktop');
+
+const imagesJson = {
+  mobile: mobileImages.map(file => path.relative('./images', file).replace(/\\/g, '/')),
+  desktop: desktopImages.map(file => path.relative('./images', file).replace(/\\/g, '/')),
+};
+
+fs.writeFileSync('./images.json', JSON.stringify(imagesJson, null, 2));
+console.log('images.json 生成完成！');
