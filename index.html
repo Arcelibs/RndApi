@@ -33,40 +33,53 @@
 </head>
 <body>
   <h1>Random Image API</h1>
-  <p>Click the buttons below to get a random image:</p>
+  <p>Use the following links or copy the API URL:</p>
   <ul>
     <li>
-      <button onclick="redirectToRandomImage('mobile')">Random Mobile Image</button>
+      <a href="?deviceType=mobile">Random Mobile Image</a>
+      <button onclick="copyToClipboard('?deviceType=mobile')">Copy API URL</button>
     </li>
     <li>
-      <button onclick="redirectToRandomImage('desktop')">Random Desktop Image</button>
+      <a href="?deviceType=desktop">Random Desktop Image</a>
+      <button onclick="copyToClipboard('?deviceType=desktop')">Copy API URL</button>
     </li>
   </ul>
   <p>If no <code>deviceType</code> is specified, this page will appear.</p>
 
   <script>
-    async function redirectToRandomImage(deviceType) {
-      console.log(`Redirecting for deviceType: ${deviceType}`);
+    function copyToClipboard(endpoint) {
+      const baseUrl = window.location.origin;
+      const fullUrl = `${baseUrl}/${endpoint}`;
+      navigator.clipboard.writeText(fullUrl)
+        .then(() => {
+          alert(`Copied to clipboard: ${fullUrl}`);
+        })
+        .catch(err => {
+          alert('Failed to copy URL to clipboard');
+          console.error(err);
+        });
+    }
 
-      try {
-        const response = await fetch('/images.json');
-        if (!response.ok) throw new Error('Failed to fetch images.json');
+    // Handle random image redirection
+    const params = new URLSearchParams(window.location.search);
+    const deviceType = params.get('deviceType');
 
-        const data = await response.json();
-        const images = data[deviceType];
-        if (images && images.length > 0) {
-          const randomImage = `/${images[Math.floor(Math.random() * images.length)]}`;
-          console.log('Redirecting to:', randomImage);
-
-          // 直接跳轉到隨機圖片
-          window.location.href = randomImage;
-        } else {
-          alert('No images available for the selected device type.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to fetch image data. Please try again later.');
-      }
+    if (deviceType) {
+      fetch('/images.json')
+        .then(response => response.json())
+        .then(data => {
+          const images = data[deviceType];
+          if (images && images.length > 0) {
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+            window.location.href = `/images/${randomImage}`;
+          } else {
+            document.body.innerHTML += `<p>No images found for deviceType: ${deviceType}</p>`;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading images.json:', error);
+          document.body.innerHTML += `<p>Failed to load images.json</p>`;
+        });
     }
   </script>
 </body>
