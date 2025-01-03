@@ -1,39 +1,43 @@
 name: Generate images.json
 
 on:
-  push:
-    paths:
-      - 'images/**'  # 監聽 images/ 目錄的變化
-  workflow_dispatch: # 支援手動觸發
+  schedule:
+    - cron: "0 */6 * * *" # 每 6 小时运行一次
+  workflow_dispatch: # 支持手动触发
 
 jobs:
-  generate-json:
+  generate-images-json:
     runs-on: ubuntu-latest
 
     steps:
-    # 檢出程式碼
+    # 检出代码
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 設定 Node.js 環境
+    # 设置 Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    # 安裝依賴（如果需要）
+    # 安装依赖
     - name: Install dependencies
       run: npm install
 
-    # 執行生成腳本
+    # 生成 images.json
     - name: Generate images.json
       run: node scripts/generate-json.js
 
-    # 提交更新的 images.json
+    # 提交和推送更改
     - name: Commit and push changes
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git add images.json
-        git commit -m "Auto-generate images.json"
-        git push
+        git clean -fdx # 清理未跟踪文件
+        if [ -n "$(git status --porcelain images.json)" ]; then
+          git add images.json
+          git commit -m "Auto-generate images.json"
+          git push
+        else
+          echo "No changes to commit, skipping commit and push."
+        fi
