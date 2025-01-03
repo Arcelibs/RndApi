@@ -1,2 +1,6 @@
 /images.json
   Content-Type: application/json
+
+/desktop/*   /desktop/:splat   200
+/mobile/*    /mobile/:splat    200
+/images/*    /images/:splat    200
