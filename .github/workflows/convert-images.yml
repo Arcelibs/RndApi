@@ -34,6 +34,6 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         git add images/
-        git rm -r --cached uploads/ # 刪除轉換後已處理的上傳文件
+        git rm -r --cached uploads/ # 只提交未處理的 .md 文件
         git commit -m "Auto-converted images to WebP and cleaned uploads"
         git push
