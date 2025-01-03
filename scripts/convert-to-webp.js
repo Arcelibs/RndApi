@@ -31,7 +31,7 @@ async function convertImageToWebP(filePath, relativePath) {
       .toFile(outputFilePath);
 
     console.log(`Converted: ${filePath} -> ${outputFilePath}`);
-    fs.unlinkSync(filePath); // 刪除原始文件
+    fs.unlinkSync(filePath); // 僅刪除已成功轉換的圖片文件
     console.log(`Deleted original file: ${filePath}`);
   } catch (err) {
     console.error(`Error converting ${filePath}:`, err);
@@ -44,15 +44,15 @@ function processDirectory(dir, baseDir) {
     const fullPath = path.join(dir, file);
     const relativePath = path.relative(baseDir, fullPath);
 
-    // 忽略 .md 文件
-    if (path.extname(file).toLowerCase() === '.md') {
-      console.log(`Skipping .md file: ${file}`);
+    // 忽略非圖片文件（例如 .md 文件）
+    if (!supportedExtensions.includes(path.extname(file).toLowerCase())) {
+      console.log(`Skipping non-image file: ${file}`);
       return;
     }
 
     if (fs.statSync(fullPath).isDirectory()) {
       processDirectory(fullPath, baseDir);
-    } else if (supportedExtensions.includes(path.extname(file).toLowerCase())) {
+    } else {
       convertImageToWebP(fullPath, relativePath);
     }
   });
