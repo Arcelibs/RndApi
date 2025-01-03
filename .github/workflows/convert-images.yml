@@ -33,7 +33,6 @@ jobs:
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git add images/
-        git rm -r --cached uploads/ # 只提交未處理的 .md 文件
-        git commit -m "Auto-converted images to WebP and cleaned uploads"
-        git push
+        git add images/ images.json # 只添加目标文件
+        git commit -m "Auto-generate images.json and converted images" || echo "No changes to commit"
+        git push || echo "No changes to push"
