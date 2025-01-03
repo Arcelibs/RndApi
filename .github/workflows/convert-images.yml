@@ -30,13 +30,10 @@ jobs:
 
     # 提交转换后的图片
     - name: Commit and push changes
+      continue-on-error: true
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         git add images/ images.json
-        if git commit -m "Auto-generate images.json and converted images"; then
-          git push
-        else
-          echo "No changes to commit"
-        fi
-        exit 0
+        git commit -m "Auto-generate images.json and converted images" || echo "No changes to commit"
+        git push || echo "No changes to push"
