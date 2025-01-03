@@ -1,0 +1,39 @@
+name: Convert Uploaded Images to WebP
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # 每 6 小時執行一次（UTC 時間）
+  workflow_dispatch: # 支援手動觸發
+
+jobs:
+  convert-images:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 檢出程式碼
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 安裝 Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # 安裝依賴
+    - name: Install dependencies
+      run: npm install
+
+    # 壓縮並轉換圖片
+    - name: Convert images to WebP
+      run: node scripts/convert-to-webp.js
+
+    # 提交轉換後的圖片
+    - name: Commit and push converted images
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add images/
+        git rm -r --cached uploads/ # 刪除轉換後已處理的上傳文件
+        git commit -m "Auto-converted images to WebP and cleaned uploads"
+        git push
