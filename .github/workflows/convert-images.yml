@@ -34,9 +34,11 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         if [ -n "$(git status --porcelain)" ]; then
+          echo "Changes detected, committing..."
           git add images/ images.json
           git commit -m "Auto-generate images.json and converted images"
           git push
         else
-          echo "No changes to commit, skipping push"
+          echo "No changes to commit, skipping commit and push."
         fi
+        exit 0
